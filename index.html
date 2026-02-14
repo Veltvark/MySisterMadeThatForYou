@@ -93,6 +93,7 @@ body{
 }
 
 /* Cuadro negro */
+
 #book{
     width:85%;
     max-width:500px;
@@ -100,11 +101,10 @@ body{
     background:black;
     border-radius:30px;
     overflow:hidden;
-    box-shadow:0 25px 70px rgba(0,0,0,0.6);
+    box-shadow:0 25px 70px rgba(0,0,0,0.8);
     display:flex;
     justify-content:center;
     align-items:center;
-    position:relative;
 }
 
 /* Imagen centrada */
@@ -124,8 +124,9 @@ body{
     z-index:10;
     position:relative;
     transform:scale(0.65);
+    color:white;
+    text-shadow:0 0 15px rgba(255,255,255,0.3);
 }
-
 </style>
 </head>
 <body>
@@ -221,10 +222,11 @@ function crearFoto(){
     }, 4000);
 }
 
+
 function iniciarAlbumFinal(){
 
-    document.body.style.background =
-    "linear-gradient(to top, #fdfbfb, #ebedee, #ffd6e0)";
+    // Fondo completamente negro
+    document.body.style.background = "black";
 
     viewer.style.opacity = "1";
 
@@ -232,8 +234,8 @@ function iniciarAlbumFinal(){
 
     // crear corazones
     setInterval(crearCorazon, 500);
-}
-
+} 
+    
 function actualizarPagina(){
     pageImg.src = fotos[index];
     pageText.textContent = textos[index].texto;
