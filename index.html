@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Álbum</title>
+<style>
+body{
+    margin:0;
+    background:black;
+    overflow:hidden;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    flex-direction:column;
+    font-family:Arial, sans-serif;
+    color:white;
+    transition: background 1.5s ease;
+}
+
+#texto{
+    position:absolute;
+    top:40px;
+    font-size:20px;
+}
+
+#album{
+    width:300px;
+    cursor:pointer;
+    transition: transform 1s ease;
+    position:relative;
+    z-index:2;
+}
+
+/* Fotos volando */
+.foto{
+    position:absolute;
+    width:150px;
+    pointer-events:none;
+    animation: volar 4s ease forwards;
+    transform: scale(0.55);
+    z-index:1;
+}
+
+@keyframes volar{
+    0%{
+        opacity:1;
+        transform: translate(0,0) scale(0.55);
+    }
+    100%{
+        opacity:0;
+        transform: translate(var(--x), var(--y)) scale(0.55) rotate(360deg);
+    }
+}
+
+/* Album final */
+
+/* Corazones */
+.corazon{
+    position:absolute;
+    color:#ff4d88;
+    font-size:20px;
+    animation: flotar 6s linear infinite;
+    opacity:0.7;
+    text-shadow:0 0 10px #ff4d88, 0 0 20px #ff99bb;
+}
+
+@keyframes flotar{
+    0%{
+        transform:translateY(100vh) scale(0.5);
+        opacity:0;
+    }
+    30%{ opacity:0.8; }
+    100%{
+        transform:translateY(-10vh) scale(1);
+        opacity:0;
+    }
+}
+
+
+#viewer{
+    position:absolute;
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    opacity:0;
+    transition: opacity 1s ease;
+    overflow:hidden;
+}
+
+/* Cuadro negro */
+#book{
+    width:85%;
+    max-width:500px;
+    height:65%;
+    background:black;
+    border-radius:30px;
+    overflow:hidden;
+    box-shadow:0 25px 70px rgba(0,0,0,0.6);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    position:relative;
+}
+
+/* Imagen centrada */
+#book img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    transform:scale(0.6);
+    border-radius:25px;
+}
+
+/* Texto abajo */
+#pageText{
+    margin-top:30px;
+    font-size:24px;
+    text-align:center;
+    z-index:10;
+    position:relative;
+    transform:scale(0.65);
+}
+
+</style>
+</head>
+<body>
+
+<div id="texto">Presiona el álbum</div>
+<img id="album" src="bookClose.png">
+
+<div id="viewer">
+    <div id="book">
+        <img id="pageImg" src="">
+    </div>
+
+    <p id="pageText"></p>
+</div>
+
+<script>
+
+const album = document.getElementById("album");
+const texto = document.getElementById("texto");
+const viewer = document.getElementById("viewer");
+const pageImg = document.getElementById("pageImg");
+const pageText = document.getElementById("pageText");
+
+const fotos = [
+    "img1.jpg",
+    "img2.jpg",
+    "img3.jpg",
+    "img4.jpg",
+    "img5.jpg",
+    "img6.jpg",
+    "img7.jpg",
+    "img8.jpg",
+    "img9.jpg",
+    "img10.jpg"
+];
+
+const textos = [
+    {texto:"Es increíblemente bonito mirar hacia atrás y recordar cada momento que he vivido a tu lado, cada experiencia que compartimos y cada recuerdo que construimos, porque contigo he aprendido lo que significa amar de una forma sana, madura y tan especial que a veces siento que nuestra relación se parece a lo perfecto.", font:"cursive"},
+    {texto:"Desde la primera vez que me llamaste tu novia guardo ese instante como uno de los más importantes de mi vida, porque supe que lo que estábamos construyendo era real, sincero y lleno de una intención hermosa que hasta hoy sigue creciendo.", font:"monospace"},
+    {texto:"Siempre has estado pendiente de mí, de cómo me siento, de cada reacción, de cada emoción, procurando que no quede ni un rastro de tristeza en mi corazón, acompañándome en cada proceso y demostrando que el amor también es cuidado y presencia constante.", font:"fantasy"},
+    {texto:"Aun cuando estás ocupado, nunca me has soltado la mano, siempre encuentras la manera de estar para mí, de hacerme sentir importante, escuchada y amada, y eso es algo que valoro más de lo que a veces logro expresar con palabras.", font:"serif"},
+    {texto:"Nunca había amado con tanta intensidad como desde que te conocí, porque contigo no siento dudas ni preocupaciones, solo una paz bonita que me hace desear que el tiempo se detenga cada vez que estamos juntos.", font:"Verdana"},
+    {texto:"Eres lo más bonito de mis días, mi lugar seguro y mi prioridad cuando pienso en el futuro, porque aunque estemos construyendo nuestros sueños poco a poco, lo único verdaderamente importante es que sigamos caminando juntos.", font:"Georgia"},
+    {texto:"Todo tiene sentido si estás a mi lado, si seguimos creciendo como pareja, apoyándonos y eligiéndonos cada día, porque no quiero nada más que esto que tenemos, este amor tan nuestro que guardo en el corazón y que siempre será para ti, mi Sr. Ensure 💗", font:"Courier New"},
+    {texto:"Si pudiera volver al momento en que nuestras vidas se cruzaron, lo haría una y mil veces, porque elegirte ha sido la decisión más bonita de mi corazón y no hay un solo día en el que no agradezca que seas tú quien camina a mi lado.", font:"Tahoma"},
+    {texto:"Contigo entendí que el amor no se trata solo de palabras bonitas, sino de presencia, paciencia, cuidado y compromiso, y por eso quiero que siempre tengas claro que mi corazón está contigo hoy y siempre, porque eres mi hogar, mi paz y mi lugar favorito en el mundo.", font:"Impact"},
+    {texto:"Pase lo que pase y sin importar los retos que la vida nos ponga enfrente, quiero que recuerdes que te amo con una profundidad que no sabía que existía, que eres mi compañero, mi sueño y mi futuro, y que mientras estemos juntos, todo lo demás simplemente encontrará su lugar.💗✨", font:"Trebuchet MS"}
+];
+
+let index = 0;
+
+album.addEventListener("click", () => {
+
+    album.src = "bookOpen.png";
+    album.style.transform = "translateY(40px)";
+
+    for(let i=0; i<9; i++){
+        crearFoto();
+    }
+
+    setTimeout(() => {
+        album.style.transform = "translateY(120vh)";
+        texto.style.opacity = "0";
+    }, 4000);
+
+    setTimeout(() => {
+        iniciarAlbumFinal();
+    }, 5500);
+
+});
+
+function crearFoto(){
+
+    const foto = document.createElement("img");
+    foto.src = fotos[Math.floor(Math.random() * fotos.length)];
+    foto.classList.add("foto");
+
+    const rect = album.getBoundingClientRect();
+
+    foto.style.left = rect.left + rect.width/2 + "px";
+    foto.style.top = rect.top + rect.height/2 + "px";
+
+    const x = (Math.random() * 600 - 300) + "px";
+    const y = (Math.random() * -600 - 200) + "px";
+
+    foto.style.setProperty('--x', x);
+    foto.style.setProperty('--y', y);
+
+    document.body.appendChild(foto);
+
+    setTimeout(() => {
+        foto.remove();
+    }, 4000);
+}
+
+function iniciarAlbumFinal(){
+
+    document.body.style.background =
+    "linear-gradient(to top, #fdfbfb, #ebedee, #ffd6e0)";
+
+    viewer.style.opacity = "1";
+
+    actualizarPagina();
+
+    // crear corazones
+    setInterval(crearCorazon, 500);
+}
+
+function actualizarPagina(){
+    pageImg.src = fotos[index];
+    pageText.textContent = textos[index].texto;
+    pageText.style.fontFamily = textos[index].font;
+}
+
+viewer.addEventListener("click", () => {
+
+    index++;
+    if(index >= fotos.length) index = 0;
+    actualizarPagina();
+
+});
+
+function crearCorazon(){
+    const corazon = document.createElement("div");
+    corazon.classList.add("corazon");
+    corazon.innerHTML = "❤";
+    corazon.style.left = Math.random() * 100 + "vw";
+    corazon.style.fontSize = (Math.random() * 20 + 15) + "px";
+    document.body.appendChild(corazon);
+
+    setTimeout(()=>{
+        corazon.remove();
+    },6000);
+}
+
+</script>
+
+</body>
+</html>
